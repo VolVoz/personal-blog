@@ -5,7 +5,9 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'steve_vozniak'
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+#    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = 'postgresql://volvoz:volvoz@localhost/volvoz-blog'
+
 
 
 class ProductionConfig(Config):

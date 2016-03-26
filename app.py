@@ -1,32 +1,60 @@
 import os
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request
+from datetime import datetime
+import models
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-from models import User
 
-# Set "homepage" to index.html
 @app.route('/')
 def index():
+    # PEACE FOR SEARCH ENTRIES
+    # search_query = request.args.get('q')
+    # if search_query:
+    #     query = Entry.search(search_query)
+    # else:
+    #     query = Entry.public().order_by(Entry.timestamp.desc())
+    # return object_list(
+    #     'index.html',
+    #     query,
+    #     search=search_query,
+    #     check_bounds=False)
     return render_template('index.html')
 
-# Save e-mail to database and send to success page
-@app.route('/prereg', methods=['POST'])
-def prereg():
-    email = None
+
+@app.route('/post')
+def post():
+    return render_template('post.html')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
+@app.route('/create', methods=['POST'])
+def new():
     if request.method == 'POST':
-        email = request.form['email']
-        # Check that email does not already exist (not a great query, but works)
-        if not db.session.query(User).filter(User.email == email).count():
-            reg = User(email)
-            db.session.add(reg)
-            db.session.commit()
-            return render_template('success.html')
-    return render_template('index.html')
+        title = request.form['title']
+        req = models.Entry(
+            title=title,
+            content="AAAAAA",
+            published=True,
+            timestamp=datetime.utcnow().isoformat())
+        db.session.add(req)
+        db.session.commit()
+        return render_template('success.html')
+    return render_template('create.html')
 
 if __name__ == '__main__':
-    #app.debug = True
+    app.debug = True
     app.run()
