@@ -5,9 +5,9 @@ from datetime import datetime
 import models
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 @app.route('/')
