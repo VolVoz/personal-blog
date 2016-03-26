@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content_title %}Create new entry{% endblock %}
+
+{% block content_second_title %}{% endblock %}
+
+{% block content %}
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>Want to get in touch with me? Fill out the form below to send me a message and I will try to get back to you within 24 hours!</p>
+                <form name="sentMessage" id="contactForm" action="{{ url_for('create') }}" method="post">
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Title</label>
+                            <input type="text" class="form-control" placeholder="Title" id="title" name="title" type="text" value="{{ request.form.get('title', '') }}">
+                            <p class="help-block text-danger"></p>
+                        </div>
+                    </div>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Content</label>
+                            <textarea class="form-control" placeholder="Content" id="content" name="content" style="height: 300px;">{{ request.form.get('content', '') }}</textarea>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                    </div>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="published" type="checkbox" value="y"> Published this entry?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="success"></div>
+                    <div class="row">
+                        <div class="form-group col-xs-12">
+                            <button type="submit" class="btn btn-default">Send</button>
+                            <a class="btn btn-default" href="{{ url_for('index') }}">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

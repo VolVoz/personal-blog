@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content_title %}Log out{% endblock %}
+
+{% block content_second_title %}{% endblock %}
+
+{% block content %}
+<form action="{{ url_for('logout') }}" class="form-horizontal" method="post">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <p>Click the button below to log out of the site.</p>
+      <button class="btn btn-primary" type="submit">Log out</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
