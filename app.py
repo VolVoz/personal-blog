@@ -3,6 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request, flash, redirect, request, \
     url_for, session, Response
 from datetime import datetime
+import functools
 
 
 app = Flask(__name__)
@@ -69,6 +70,7 @@ def login():
 
 
 @app.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
     if request.method == 'POST':
         session.clear()
@@ -77,6 +79,7 @@ def logout():
 
 
 @app.route('/create', methods=['GET', 'POST'])
+@login_required
 def create():
     if request.method == 'POST':
         title = request.form['title']
@@ -90,7 +93,6 @@ def create():
         db.session.add(req)
         db.session.commit()
         flash('Entry created successfully.', 'success')
-        #return render_template('create.html')
     return render_template('create.html')
 
 
@@ -99,5 +101,5 @@ def not_found(exc):
     return render_template('404.html')
 
 if __name__ == '__main__':
-    app.debug = False
+    app.debug = True
     app.run()
