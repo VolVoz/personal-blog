@@ -1,17 +1,17 @@
-import os
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, request, flash, redirect, request, \
-    url_for, session, Response
+from flask import Flask, render_template, flash, redirect, request, \
+    url_for, session
 from datetime import datetime
 import functools
-
+from sqlalchemy import desc
+from playhouse.sqlite_ext import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config.from_object(os.environ['APP_SETTINGS'])
+app.config.from_object('config.Config')
 db = SQLAlchemy(app)
 
-import models
+from models import *
 
 
 def login_required(fn):
@@ -25,36 +25,21 @@ def login_required(fn):
 
 @app.route('/')
 def index():
-    # PEACE FOR SEARCH ENTRIES
-    # search_query = request.args.get('q')
-    # if search_query:
-    #     query = Entry.search(search_query)
-    # else:
-    #     query = Entry.public().order_by(Entry.timestamp.desc())
-    # return object_list(
-    #     'index.html',
-    #     query,
-    #     search=search_query,
-    #     check_bounds=False)
-    return render_template('index.html')
+    query = Entry.query.order_by(desc(Entry.timestamp)).all()
+    return render_template('index.html', object_list=query)
 
 
-@app.route('/post')
-def post():
-    return render_template('post.html')
-
-
-@app.route('/about')
+@app.route('/about/')
 def about():
     return render_template('about.html')
 
 
-@app.route('/contact')
+@app.route('/contact/')
 def contact():
     return render_template('contact.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     next_url = request.args.get('next') or request.form.get('next')
     if request.method == 'POST' and request.form.get('password'):
@@ -69,7 +54,7 @@ def login():
     return render_template('login.html', next_url=next_url)
 
 
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/logout/', methods=['GET', 'POST'])
 @login_required
 def logout():
     if request.method == 'POST':
@@ -78,22 +63,59 @@ def logout():
     return render_template('logout.html')
 
 
-@app.route('/create', methods=['GET', 'POST'])
+@app.route('/create/', methods=['GET', 'POST'])
 @login_required
 def create():
     if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-        published = request.form.get('published') or False
-        req = models.Entry(
-            title=title,
-            content=content,
-            published=published,
-            timestamp=datetime.utcnow().isoformat())
-        db.session.add(req)
-        db.session.commit()
-        flash('Entry created successfully.', 'success')
+        if request.form.get('title') and request.form.get('content'):
+            new_entry = Entry(
+                title=request.form['title'],
+                content=request.form['content'],
+                published=request.form.get('published') or False,
+                timestamp=datetime.utcnow().isoformat(),
+                slug=re.sub('[^\w]+', '-',
+                            request.form['title'].lower()).strip('-'))
+            db.session.add(new_entry)
+            db.session.commit()
+            flash('Entry created successfully.', 'success')
+        else:
+            flash('Title and Content are required.', 'danger')
     return render_template('create.html')
+
+
+@app.route('/<slug>/edit/', methods=['GET', 'POST'])
+@login_required
+def edit(slug):
+    if Entry.query.filter_by(slug=slug).first():
+        entry = Entry.query.filter_by(slug=slug).first()
+        if request.method == 'POST':
+            if request.form.get('title') and request.form.get('content'):
+                entry.title = request.form['title']
+                entry.content = request.form['content']
+                entry.published = request.form.get('published') or False
+                req = Entry(
+                    title=entry.title,
+                    content=entry.content,
+                    published=entry.published,
+                    timestamp=datetime.utcnow().isoformat(),
+                    slug=re.sub('[^\w]+',
+                                '-',
+                                entry.title.lower()).strip('-'))
+                db.session.add(req)
+                db.session.commit()
+                flash('Entry created successfully.', 'success')
+            else:
+                flash('Title and Content are required.', 'danger')
+        return render_template('edit.html', entry=entry)
+    return render_template('404.html')
+
+
+@app.route('/<slug>/')
+def detail(slug):
+    if Entry.query.filter_by(slug=slug).first():
+        entry = Entry.query.filter_by(slug=slug).first()
+        return render_template('detail.html', entry=entry)
+    return render_template('404.html')
 
 
 @app.errorhandler(404)
@@ -101,5 +123,5 @@ def not_found(exc):
     return render_template('404.html')
 
 if __name__ == '__main__':
-    app.debug = True
+    app.debug = False
     app.run()
