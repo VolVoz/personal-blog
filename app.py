@@ -92,12 +92,20 @@ def create():
     return render_template('create.html')
 
 
-@app.route('/<slug>/edit/', methods=['GET', 'POST'])
+@app.route('/<slug>/edit/', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def edit(slug):
     if Entry.query.filter_by(slug=slug).first():
         entry = Entry.query.filter_by(slug=slug).first()
-        if request.method == 'POST':
+        if request.form.get('_method', '').upper() == 'DELETE':
+            try:
+                db.session.delete(entry)
+                db.session.commit()
+                flash('Entry deleted successfully.', 'success')
+                return render_template('about.html')
+            except exc.SQLAlchemyError:
+                flash('Cant delete row, SQLAlchemy pizdec!', 'danger')
+        elif request.method == 'POST':
             if request.form.get('title') and request.form.get('content'):
                 entry.title = request.form.get('title')
                 entry.content = request.form.get('content')
