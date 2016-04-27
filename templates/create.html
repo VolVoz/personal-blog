@@ -9,7 +9,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <form name="newEntry" id="contactForm" action="{{ url_for('create') }}" method="post">
+                <form name="newEntry" id="createForm" action="{{ url_for('create') }}" method="post">
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Title</label>
@@ -24,20 +24,10 @@
                             <p class="help-block text-danger"></p>
                         </div>
                     </div>
-                    <div class="row control-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input name="published" type="checkbox" value="y"> Published this entry?
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                     <br>
-                    <div id="success"></div>
                     <div class="row">
                         <div class="form-group col-xs-12">
-                            <button type="submit" class="btn btn-default">Send</button>
+                            <button type="submit" class="btn btn-default">Create</button>
                             <a class="btn btn-default" href="{{ url_for('index') }}">Cancel</a>
                         </div>
                     </div>

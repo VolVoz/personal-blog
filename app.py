@@ -5,11 +5,15 @@ from datetime import datetime
 import functools
 from sqlalchemy import desc
 from playhouse.sqlite_ext import *
+from sqlalchemy import exc
+from micawber import bootstrap_basic
+from micawber.cache import Cache as OEmbedCache
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config.from_object('config.Config')
 db = SQLAlchemy(app)
+oembed_providers = bootstrap_basic(OEmbedCache())
 
 from models import *
 
@@ -73,11 +77,16 @@ def create():
                 content=request.form['content'],
                 published=request.form.get('published') or False,
                 timestamp=datetime.utcnow().isoformat(),
-                slug=re.sub('[^\w]+', '-',
-                            request.form['title'].lower()).strip('-'))
-            db.session.add(new_entry)
-            db.session.commit()
-            flash('Entry created successfully.', 'success')
+                slug=re.sub('[^\w]+', '-', request.form['title'].lower()).strip('-'))
+            print "Here"
+            try:
+                db.session.add(new_entry)
+                db.session.commit()
+                flash('Entry created successfully.', 'success')
+                print "success"
+            except exc.SQLAlchemyError:
+                print "WRF?"
+                flash('Something wrong happend with create entry.', 'danger')
         else:
             flash('Title and Content are required.', 'danger')
     return render_template('create.html')
@@ -90,22 +99,16 @@ def edit(slug):
         entry = Entry.query.filter_by(slug=slug).first()
         if request.method == 'POST':
             if request.form.get('title') and request.form.get('content'):
-                entry.title = request.form['title']
-                entry.content = request.form['content']
+                entry.title = request.form.get('title')
+                entry.content = request.form.get('content')
                 entry.published = request.form.get('published') or False
-                req = Entry(
-                    title=entry.title,
-                    content=entry.content,
-                    published=entry.published,
-                    timestamp=datetime.utcnow().isoformat(),
-                    slug=re.sub('[^\w]+',
-                                '-',
-                                entry.title.lower()).strip('-'))
-                db.session.add(req)
-                db.session.commit()
-                flash('Entry created successfully.', 'success')
+                try:
+                    db.session.commit()
+                    flash('Entry updated successfully.', 'success')
+                except exc.SQLAlchemyError:
+                    flash('Something wrong happend with edit entry.', 'danger')
             else:
-                flash('Title and Content are required.', 'danger')
+                flash('Title and Content are required,dude!', 'danger')
         return render_template('edit.html', entry=entry)
     return render_template('404.html')
 
@@ -123,5 +126,5 @@ def not_found(exc):
     return render_template('404.html')
 
 if __name__ == '__main__':
-    app.debug = False
+    app.debug = True
     app.run()

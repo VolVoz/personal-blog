@@ -1,8 +1,10 @@
-from app import db
-from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
+from app import db, oembed_providers
+from config import Config
+from markdown import markdown
+from markdown.extensions.codehilite import CodeHiliteExtension
+from markdown.extensions.extra import ExtraExtension
+from micawber import parse_html
+from flask import Markup
 
 
 class User(db.Model):
@@ -25,6 +27,18 @@ class Entry(db.Model):
     content = db.Column(db.String)
     published = db.Column(db.Boolean)
     timestamp = db.Column(db.DateTime)
+
+    @property
+    def html_content(self):
+        hilite = CodeHiliteExtension(linenums=False, css_class='highlight')
+        extras = ExtraExtension()
+        markdown_content = markdown(self.content, extensions=[hilite, extras])
+        oembed_content = parse_html(
+            markdown_content,
+            oembed_providers,
+            urlize_all=True,
+            maxwidth=Config.SITE_WIDTH)
+        return Markup(oembed_content)
 
     def __init__(self, title, content, published, timestamp, slug):
         self.title = title

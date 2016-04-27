@@ -1,6 +1,3 @@
-import os
-
-
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -9,6 +6,7 @@ class Config(object):
     ADMIN_PASSWORD = 'volvoz'
 #    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SQLALCHEMY_DATABASE_URI = 'postgresql://volvoz:volvoz@localhost/volvoz-blog'
+    SITE_WIDTH = 800
 
 
 class ProductionConfig(Config):
