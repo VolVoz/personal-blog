@@ -8,12 +8,15 @@ from playhouse.sqlite_ext import *
 from sqlalchemy import exc
 from micawber import bootstrap_basic
 from micawber.cache import Cache as OEmbedCache
+from flask_mailer import Mailer, Email
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config.from_object('config.Config')
 db = SQLAlchemy(app)
 oembed_providers = bootstrap_basic(OEmbedCache())
+smtp = Mailer(app)
 
 from models import *
 
@@ -38,8 +41,20 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/contact/')
+@app.route('/contact/', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        mail = Email(
+            subject=request.form['name'],
+            text="Hello, my name is "+request.form['name']+". My phone - "+request.form['phone']+". My email-" +
+                 request.form['email']+"Message: " + request.form['message'],
+            to='vozniak.vol@hotmail.com',
+            from_addr='vozniak.volodymyr@personal.blog')
+        try:
+            smtp.send(mail)
+            flash('Thank you!.', 'success')
+        except:
+            flash('Oops, some shit happends with smtp.. sorry, I fix it at next commit!', 'danger')
     return render_template('contact.html')
 
 
