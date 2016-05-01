@@ -13,7 +13,7 @@ from flask_mailer import Mailer, Email
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config.from_object('config.Config')
+app.config.from_object('config.ProductionConfig')
 db = SQLAlchemy(app)
 oembed_providers = bootstrap_basic(OEmbedCache())
 smtp = Mailer(app)
@@ -149,5 +149,5 @@ def not_found(exc):
     return render_template('404.html')
 
 if __name__ == '__main__':
-    app.debug = True
+    app.debug = False
     app.run()

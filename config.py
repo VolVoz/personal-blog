@@ -1,11 +1,10 @@
 class Config(object):
-    DEBUG = False
+    DEBUG = True
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'steve_vozniak'
     ADMIN_PASSWORD = 'volvoz'
-#    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-    SQLALCHEMY_DATABASE_URI = 'postgresql://volvoz:volvoz@localhost/volvoz-blog'
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SITE_WIDTH = 800
 
 
@@ -21,6 +20,7 @@ class StagingConfig(Config):
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'postgresql://volvoz:volvoz@localhost/volvoz-blog'
 
 
 class TestingConfig(Config):
