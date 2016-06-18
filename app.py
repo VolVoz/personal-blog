@@ -1,19 +1,23 @@
-from flask.ext.sqlalchemy import SQLAlchemy
+import functools
+import smtplib
+from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 from flask import Flask, render_template, flash, redirect, request, \
     url_for, session
-from datetime import datetime
-import functools
-from sqlalchemy import desc
-from playhouse.sqlite_ext import *
-from sqlalchemy import exc
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask_mailer import Mailer
 from micawber import bootstrap_basic
 from micawber.cache import Cache as OEmbedCache
-from flask_mailer import Mailer, Email
-
+from playhouse.sqlite_ext import *
+from sqlalchemy import desc
+from sqlalchemy import exc
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config.from_object('config.ProductionConfig')
+app.config.from_object('config.DevelopmentConfig')
 db = SQLAlchemy(app)
 oembed_providers = bootstrap_basic(OEmbedCache())
 smtp = Mailer(app)
@@ -30,11 +34,29 @@ def login_required(fn):
     return inner
 
 
+class Mail:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def send_mail(message):
+        gmailUser = 'myflaskvozniakblog@gmail.com'
+        gmailPassword = 'Vova1994'
+        recipient = 'vozniak.vol@hotmail.com'
+        mailServer = smtplib.SMTP('smtp.gmail.com', 587)
+        mailServer.ehlo()
+        mailServer.starttls()
+        mailServer.ehlo()
+        mailServer.login(gmailUser, gmailPassword)
+        mailServer.sendmail(gmailUser, recipient, message.as_string())
+        mailServer.close()
+
+
+
 @app.route('/')
 def index():
     query = Entry.query.order_by(desc(Entry.timestamp)).all()
     return render_template('index.html', object_list=query)
-
 
 @app.route('/about/')
 def about():
@@ -44,15 +66,14 @@ def about():
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        mail = Email(
-            subject=request.form['name'],
-            text="Hello, my name is "+request.form['name']+". My phone - "+request.form['phone']+". My email-" +
-                 request.form['email']+"Message: " + request.form['message'],
-            to='vozniak.vol@hotmail.com',
-            from_addr='vozniak.volodymyr@personal.blog')
+        m = Mail()
+        msg = MIMEMultipart()
+        msg['Subject'] = "New answer from BLOG"
+        message = "\nHello, my name is " + request.form['name'] + ".\n My phone: " + request.form['phone'] + ".\n My email: " + request.form['email'] + ".\n Message: " + request.form['message']
+        msg.attach(MIMEText(message))
         try:
-            smtp.send(mail)
-            flash('Thank you!.', 'success')
+            m.send_mail(msg)
+            flash('Thank you!', 'success')
         except:
             flash('Oops, some shit happends with smtp.. sorry, I fix it at next commit!', 'danger')
     return render_template('contact.html')
@@ -86,53 +107,54 @@ def logout():
 @login_required
 def create():
     if request.method == 'POST':
-        if request.form.get('title') and request.form.get('content'):
             new_entry = Entry(
                 title=request.form['title'],
                 content=request.form['content'],
-                published=request.form.get('published') or False,
                 timestamp=datetime.utcnow().isoformat(),
                 slug=re.sub('[^\w]+', '-', request.form['title'].lower()).strip('-'))
-            print "Here"
+            for keyword in request.form.get("keywords").split(","):
+                if keyword in [key.name for key in Keywords.query.all()]:
+                    curr_key = Keywords.query.filter_by(name=keyword).first()
+                    new_entry.keywords.append(curr_key)
+                else:
+                    new_key = Keywords(keyword)
+                    Keywords.add_keyword(new_key)
+                    new_entry.keywords.append(new_key)
             try:
-                db.session.add(new_entry)
-                db.session.commit()
+                Entry.add_entry(new_entry)
                 flash('Entry created successfully.', 'success')
-                print "success"
+                return render_template('detail.html', entry=new_entry)
             except exc.SQLAlchemyError:
-                print "WRF?"
-                flash('Something wrong happend with create entry.', 'danger')
-        else:
-            flash('Title and Content are required.', 'danger')
-    return render_template('create.html')
+                flash('Something wrong happened with db.', 'danger')
+    return render_template('create.html', keywords=Keywords.query.all())
 
 
-@app.route('/<slug>/edit/', methods=['GET', 'POST', 'DELETE'])
+@app.route('/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(slug):
     if Entry.query.filter_by(slug=slug).first():
         entry = Entry.query.filter_by(slug=slug).first()
-        if request.form.get('_method', '').upper() == 'DELETE':
+        if request.method == 'POST' and request.form.get('_method', '').upper() == 'DELETE':
             try:
                 db.session.delete(entry)
                 db.session.commit()
                 flash('Entry deleted successfully.', 'success')
-                return render_template('about.html')
+                return render_template('index.html')
             except exc.SQLAlchemyError:
                 flash('Cant delete row, SQLAlchemy pizdec!', 'danger')
-        elif request.method == 'POST':
+        elif request.method == 'POST' and request.form.get('_method', '').upper() == 'EDIT':
             if request.form.get('title') and request.form.get('content'):
                 entry.title = request.form.get('title')
                 entry.content = request.form.get('content')
-                entry.published = request.form.get('published') or False
                 try:
                     db.session.commit()
                     flash('Entry updated successfully.', 'success')
+                    return render_template('detail.html', entry=entry)
                 except exc.SQLAlchemyError:
-                    flash('Something wrong happend with edit entry.', 'danger')
+                    flash('Something wrong happened with edit entry.', 'danger')
             else:
                 flash('Title and Content are required,dude!', 'danger')
-        return render_template('edit.html', entry=entry)
+        return render_template('edit.html', entry=entry, keywords=Keywords.query.all())
     return render_template('404.html')
 
 
@@ -143,11 +165,14 @@ def detail(slug):
         return render_template('detail.html', entry=entry)
     return render_template('404.html')
 
+@app.route('/sort_by/<keyword>/')
+def sort_by(keyword):
+    query = Entry.query.order_by(desc(Entry.timestamp)).all()
+    return render_template('index.html', object_list=[e for e in query if keyword in [k.name for k in e.keywords]])
 
 @app.errorhandler(404)
 def not_found(exc):
     return render_template('404.html')
 
 if __name__ == '__main__':
-    app.debug = False
     app.run()

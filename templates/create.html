@@ -4,25 +4,54 @@
 
 {% block content_second_title %}{% endblock %}
 
+{% block extra_scripts %}
+<link href="{{ url_for('static', filename='css/animate.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/jquery.popSelect.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/multiple-select.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/multiple-select.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/prism.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.popSelect.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/base-methods.js') }}"></script>
+{% endblock %}
+
+
 {% block content %}
     <!-- Main Content -->
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <form name="newEntry" id="createForm" action="{{ url_for('create') }}" method="post">
+                <form name="newEntry" onsubmit="GetSelectedItem()" id="createForm" action="{{ url_for('create') }}" method="post">
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Title</label>
-                            <input type="text" class="form-control" placeholder="Title" id="title" name="title" type="text" value="{{ request.form.get('title', '') }}">
+                            <input type="text" class="form-control" placeholder="title" id="title" name="title" type="text" value="{{ request.form.get('title', '') }}" required>
                             <p class="help-block text-danger"></p>
                         </div>
                     </div>
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Content</label>
-                            <textarea class="form-control" placeholder="Content" id="content" name="content" style="height: 300px;">{{ request.form.get('content', '') }}</textarea>
+                            <textarea class="form-control" placeholder="content" id="content" name="content" style="height: 300px;" value="{{ request.form.get('content', '') }}" required></textarea>
                             <p class="help-block text-danger"></p>
                         </div>
+                    </div>
+                    <br>
+                    <div class="row control-group">
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <select class="form-control" placeholder="select keywords" name="main-example" id="main-example" class="form-control">
+                          {% for keyword in keywords %}
+                          <option value="{{ keyword.name }}">{{ keyword.name }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <input type="hidden" class="form-control" name="keywords" id="keywords">
+                      <br>
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                          <label>Add new keyword</label>
+                          <input type="text" pattern="[A-Za-z0-9]{1,20}" class="form-control" placeholder="add keyword" name="new_keyword" id="new_keyword">
+                          <button type="button" class="btn btn-default" onclick="addNewKeyword();ClearFields();">Add keyword</button>
+                      </div>
                     </div>
                     <br>
                     <div class="row">

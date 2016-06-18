@@ -2,7 +2,9 @@
 
 {% block content_title %}<font size="9">{{ entry.title }}</font>{% endblock %}
 
-{% block content_second_title %}Posted on {{ entry.timestamp.strftime('%m/%d/%Y') }}{% endblock %}
+{% block content_second_title %}
+
+{% endblock %}
 
 {% block extra_header %}
     {% if session.logged_in %}
@@ -16,6 +18,12 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <p>{{ entry.html_content }}</p>
+                <h4>
+                {% for keyword in entry.keywords %}
+                  <a href="{{ url_for('sort_by', keyword=keyword.name) }}">{{ keyword.name }}</a>
+                {% endfor %}
+                </h4>
+                <p class="post-meta">Created on {{ entry.timestamp.strftime('%m/%d/%Y') }}</p>
             </div>
         </div>
     </div>

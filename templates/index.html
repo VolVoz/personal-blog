@@ -14,10 +14,13 @@
                 {% for entry in object_list %}
                   <div class="post-preview">
                     <a href="{{ url_for('detail', slug=entry.slug) }}">
-                        <h2 class="post-title">
-                            {{ entry.title }}
-                        </h2>
+                        <h2 class="post-title">{{ entry.title }}</h2>
                     </a>
+                    <h4>
+                    {% for keyword in entry.keywords %}
+                      <a href="{{ url_for('sort_by', keyword=keyword.name) }}">{{ keyword.name }}</a>
+                    {% endfor %}
+                    </h4>
                     <p class="post-meta">Created on {{ entry.timestamp.strftime('%m/%d/%Y') }}</p>
                   </div>
                   <hr>
