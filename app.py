@@ -1,5 +1,7 @@
 import functools
 import smtplib
+import re
+import os
 from datetime import datetime
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
@@ -14,7 +16,7 @@ from sqlalchemy import exc
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config.from_object('config.DevelopmentConfig')
+app.config.from_object('config.StagingConfig')
 db = SQLAlchemy(app)
 oembed_providers = bootstrap_basic(OEmbedCache())
 smtp = Mailer(app)
