@@ -9,7 +9,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask_mailer import Mailer
 from micawber import bootstrap_basic
 from micawber.cache import Cache as OEmbedCache
-from playhouse.sqlite_ext import *
 from sqlalchemy import desc
 from sqlalchemy import exc
 
@@ -38,16 +37,16 @@ class Mail:
 
     @staticmethod
     def send_mail(message):
-        gmailUser = os.environ['GMAIL_USER']
-        gmailPassword = os.environ['GMAIL_PASS']
+        gmail_user = os.environ['GMAIL_USER']
+        gmail_password = os.environ['GMAIL_PASS']
         recipient = 'vozniak.vol@hotmail.com'
-        mailServer = smtplib.SMTP('smtp.gmail.com', 587)
-        mailServer.ehlo()
-        mailServer.starttls()
-        mailServer.ehlo()
-        mailServer.login(gmailUser, gmailPassword)
-        mailServer.sendmail(gmailUser, recipient, message.as_string())
-        mailServer.close()
+        mail_server = smtplib.SMTP('smtp.gmail.com', 587)
+        mail_server.ehlo()
+        mail_server.starttls()
+        mail_server.ehlo()
+        mail_server.login(gmail_user, gmail_password)
+        mail_server.sendmail(gmail_user, recipient, message.as_string())
+        mail_server.close()
 
 
 @app.route('/')

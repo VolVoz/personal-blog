@@ -42,12 +42,12 @@ class Entry(db.Model):
         self.slug = slug
 
     @classmethod
-    def add_entry(self, entry):
+    def add_entry(cls, entry):
         db.session.add(entry)
         return db.session.commit()
 
     @classmethod
-    def delete_entry(self, entry):
+    def delete_entry(cls, entry):
         db.session.delete(entry)
         return db.session.commit()
 
@@ -64,12 +64,12 @@ class Tags(db.Model):
         self.name = name
 
     @classmethod
-    def add_tag(self, name):
+    def add_tag(cls, name):
         db.session.add(name)
         return db.session.commit()
 
     @classmethod
-    def delete_tag(self, name):
+    def delete_tag(cls, name):
         db.session.delete(name)
         return db.session.commit()
 
