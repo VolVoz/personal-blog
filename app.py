@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+from email.errors import MessageError
 from flask import Flask, render_template, flash, redirect, request, \
     url_for, session
 from flask_mailer import Mailer
@@ -27,7 +28,7 @@ def login_required(fn):
     return inner
 
 
-class Mail:
+class Mail(object):
     def __init__(self):
         pass
 
@@ -67,7 +68,7 @@ def contact():
         try:
             m.send_mail(msg)
             flash('Thank you!', 'success')
-        except:
+        except MessageError:
             flash('Oops, some shit happends with smtp.. sorry, I fix it at next commit!', 'danger')
     return render_template('contact.html')
 
@@ -139,7 +140,7 @@ def edit(slug):
                 entry.title = request.form.get('title')
                 entry.content = request.form.get('content')
                 try:
-                    db.session.commit()
+                    Entry.update_entry()
                     flash('Entry updated successfully.', 'success')
                     return render_template('detail.html', entry=entry)
                 except exc.SQLAlchemyError:

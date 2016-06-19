@@ -53,6 +53,10 @@ class Entry(db.Model):
         db.session.delete(entry)
         return db.session.commit()
 
+    @classmethod
+    def update_entry(cls):
+      return db.session.commit()
+
     def __repr__(self):
         return '<Entry %r>' % self.slug
 
