@@ -52,11 +52,11 @@ class Mail:
         mailServer.close()
 
 
-
 @app.route('/')
 def index():
     query = Entry.query.order_by(desc(Entry.timestamp)).all()
     return render_template('index.html', object_list=query)
+
 
 @app.route('/about/')
 def about():
@@ -136,8 +136,7 @@ def edit(slug):
         entry = Entry.query.filter_by(slug=slug).first()
         if request.method == 'POST' and request.form.get('_method', '').upper() == 'DELETE':
             try:
-                db.session.delete(entry)
-                db.session.commit()
+                Entry.delete_entry(entry)
                 flash('Entry deleted successfully.', 'success')
                 return render_template('index.html')
             except exc.SQLAlchemyError:
@@ -165,10 +164,12 @@ def detail(slug):
         return render_template('detail.html', entry=entry)
     return render_template('404.html')
 
+
 @app.route('/sort_by/<keyword>/')
 def sort_by(keyword):
     query = Entry.query.order_by(desc(Entry.timestamp)).all()
     return render_template('index.html', object_list=[e for e in query if keyword in [k.name for k in e.keywords]])
+
 
 @app.errorhandler(404)
 def not_found(exc):

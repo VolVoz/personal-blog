@@ -8,11 +8,11 @@ from flask import Markup
 from sqlalchemy.exc import SQLAlchemyError
 
 
-relationship_table=db.Table('relationship_table',
+relationship_table = db.Table('relationship_table',
+                              db.Column('entries_id', db.Integer, db.ForeignKey('entries.id'), nullable=False),
+                              db.Column('keywords_id', db.Integer, db.ForeignKey('keywords.id'), nullable=False),
+                              db.PrimaryKeyConstraint('entries_id', 'keywords_id'))
 
-                             db.Column('entries_id', db.Integer,db.ForeignKey('entries.id'), nullable=False),
-                             db.Column('keywords_id', db.Integer,db.ForeignKey('keywords.id'), nullable=False),
-                             db.PrimaryKeyConstraint('entries_id', 'keywords_id'))
 
 class Entry(db.Model):
     __tablename__ = "entries"
@@ -21,7 +21,7 @@ class Entry(db.Model):
     slug = db.Column(db.String, unique=True)
     content = db.Column(db.String)
     timestamp = db.Column(db.DateTime)
-    keywords=db.relationship('Keywords', secondary=relationship_table, backref='entries' )
+    keywords = db.relationship('Keywords', secondary=relationship_table, backref='entries')
 
     @property
     def html_content(self):
@@ -57,8 +57,8 @@ class Entry(db.Model):
 
 class Keywords(db.Model):
     __tablename__ = "keywords"
-    id=db.Column(db.Integer, primary_key=True)
-    name=db.Column(db.String, unique=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
 
     def __init__(self, name):
         self.name = name
