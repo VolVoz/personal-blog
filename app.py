@@ -38,8 +38,8 @@ class Mail:
 
     @staticmethod
     def send_mail(message):
-        gmailUser = 'myflaskvozniakblog@gmail.com'
-        gmailPassword = 'Vova1994'
+        gmailUser = os.environ['GMAIL_USER']
+        gmailPassword = os.environ['GMAIL_PASS']
         recipient = 'vozniak.vol@hotmail.com'
         mailServer = smtplib.SMTP('smtp.gmail.com', 587)
         mailServer.ehlo()
@@ -67,7 +67,7 @@ def contact():
         m = Mail()
         msg = MIMEMultipart()
         msg['Subject'] = "New answer from BLOG"
-        message = "\nHello, my name is " + request.form['name'] + ".\n My phone: " + request.form['phone'] + ".\n My email: " + request.form['email'] + ".\n Message: " + request.form['message']
+        message = "\nHello, my name is " + request.form['name'] + ".\n My email: " + request.form['email'] + ".\n Message: " + request.form['message']
         msg.attach(MIMEText(message))
         try:
             m.send_mail(msg)

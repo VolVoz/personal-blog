@@ -5,8 +5,8 @@ class Config(object):
     DEBUG = True
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = 'volvoz'
-    ADMIN_PASSWORD = 'volvoz'
+    SECRET_KEY = os.environ['SECRET_KEY']
+    ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SITE_WIDTH = 800
 
