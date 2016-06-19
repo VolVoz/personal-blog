@@ -39,18 +39,18 @@
                     <br>
                     <div class="row control-group">
                       <div class="form-group col-xs-12 floating-label-form-group controls">
-                        <select class="form-control" placeholder="select keywords" name="main-example" id="main-example" class="form-control">
-                          {% for keyword in keywords %}
-                          <option value="{{ keyword.name }}">{{ keyword.name }}</option>
+                        <select class="form-control" placeholder="select tags" name="main-example" id="main-example" class="form-control">
+                          {% for tag in tags %}
+                          <option value="{{ tag.name }}">{{ tag.name }}</option>
                           {% endfor %}
                         </select>
                       </div>
-                      <input type="hidden" class="form-control" name="keywords" id="keywords">
+                      <input type="hidden" class="form-control" name="tags" id="tags">
                       <br>
                       <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Add new keyword</label>
-                          <input type="text" pattern="[A-Za-z0-9]{1,20}" class="form-control" placeholder="add keyword" name="new_keyword" id="new_keyword">
-                          <button type="button" class="btn btn-default" onclick="addNewKeyword();ClearFields();">Add keyword</button>
+                          <label>Add new tag</label>
+                          <input type="text" pattern="[A-Za-z0-9]{1,20}" class="form-control" placeholder="add tag" name="new_tag" id="new_tag">
+                          <button type="button" class="btn btn-default" onclick="addNewTag();ClearFields();">Add tag</button>
                       </div>
                     </div>
                     <br>

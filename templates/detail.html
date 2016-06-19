@@ -19,8 +19,8 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <p>{{ entry.html_content }}</p>
                 <h4>
-                {% for keyword in entry.keywords %}
-                  <a href="{{ url_for('sort_by', keyword=keyword.name) }}">{{ keyword.name }}</a>
+                {% for tag in entry.tags %}
+                  <a href="{{ url_for('sort_by', tag=tag.name) }}">{{ tag.name }}</a>
                 {% endfor %}
                 </h4>
                 <p class="post-meta">Created on {{ entry.timestamp.strftime('%m/%d/%Y') }}</p>

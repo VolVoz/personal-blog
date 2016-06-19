@@ -1,8 +1,6 @@
 import functools
 import smtplib
 from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from flask import Flask, render_template, flash, redirect, request, \
@@ -22,7 +20,7 @@ db = SQLAlchemy(app)
 oembed_providers = bootstrap_basic(OEmbedCache())
 smtp = Mailer(app)
 
-from models import *
+from models import Entry, Tags
 
 
 def login_required(fn):
@@ -112,21 +110,21 @@ def create():
                 content=request.form['content'],
                 timestamp=datetime.utcnow().isoformat(),
                 slug=re.sub('[^\w]+', '-', request.form['title'].lower()).strip('-'))
-            for keyword in request.form.get("keywords").split(","):
-                if keyword in [key.name for key in Keywords.query.all()]:
-                    curr_key = Keywords.query.filter_by(name=keyword).first()
-                    new_entry.keywords.append(curr_key)
+            for tag in request.form.get("tags").split(","):
+                if tag in [key.name for key in Tags.query.all()]:
+                    curr_key = Tags.query.filter_by(name=tag).first()
+                    new_entry.tags.append(curr_key)
                 else:
-                    new_key = Keywords(keyword)
-                    Keywords.add_keyword(new_key)
-                    new_entry.keywords.append(new_key)
+                    new_key = Tags(tag)
+                    Tags.add_tag(new_key)
+                    new_entry.tags.append(new_key)
             try:
                 Entry.add_entry(new_entry)
                 flash('Entry created successfully.', 'success')
                 return render_template('detail.html', entry=new_entry)
             except exc.SQLAlchemyError:
                 flash('Something wrong happened with db.', 'danger')
-    return render_template('create.html', keywords=Keywords.query.all())
+    return render_template('create.html', tags=Tags.query.all())
 
 
 @app.route('/<slug>/edit/', methods=['GET', 'POST'])
@@ -153,7 +151,7 @@ def edit(slug):
                     flash('Something wrong happened with edit entry.', 'danger')
             else:
                 flash('Title and Content are required,dude!', 'danger')
-        return render_template('edit.html', entry=entry, keywords=Keywords.query.all())
+        return render_template('edit.html', entry=entry, tags=Tags.query.all())
     return render_template('404.html')
 
 
@@ -165,10 +163,10 @@ def detail(slug):
     return render_template('404.html')
 
 
-@app.route('/sort_by/<keyword>/')
-def sort_by(keyword):
+@app.route('/sort_by/<tag>/')
+def sort_by(tag):
     query = Entry.query.order_by(desc(Entry.timestamp)).all()
-    return render_template('index.html', object_list=[e for e in query if keyword in [k.name for k in e.keywords]])
+    return render_template('index.html', object_list=[e for e in query if tag in [k.name for k in e.tags]])
 
 
 @app.errorhandler(404)

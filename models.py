@@ -10,8 +10,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 relationship_table = db.Table('relationship_table',
                               db.Column('entries_id', db.Integer, db.ForeignKey('entries.id'), nullable=False),
-                              db.Column('keywords_id', db.Integer, db.ForeignKey('keywords.id'), nullable=False),
-                              db.PrimaryKeyConstraint('entries_id', 'keywords_id'))
+                              db.Column('tags_id', db.Integer, db.ForeignKey('tags.id'), nullable=False),
+                              db.PrimaryKeyConstraint('entries_id', 'tags_id'))
 
 
 class Entry(db.Model):
@@ -21,7 +21,7 @@ class Entry(db.Model):
     slug = db.Column(db.String, unique=True)
     content = db.Column(db.String)
     timestamp = db.Column(db.DateTime)
-    keywords = db.relationship('Keywords', secondary=relationship_table, backref='entries')
+    tags = db.relationship('Tags', secondary=relationship_table, backref='entries')
 
     @property
     def html_content(self):
@@ -55,8 +55,8 @@ class Entry(db.Model):
         return '<Entry %r>' % self.slug
 
 
-class Keywords(db.Model):
-    __tablename__ = "keywords"
+class Tags(db.Model):
+    __tablename__ = "tags"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
 
@@ -64,14 +64,14 @@ class Keywords(db.Model):
         self.name = name
 
     @classmethod
-    def add_keyword(self, name):
+    def add_tag(self, name):
         db.session.add(name)
         return db.session.commit()
 
     @classmethod
-    def delete_keyword(self, name):
+    def delete_tag(self, name):
         db.session.delete(name)
         return db.session.commit()
 
     def __repr__(self):
-        return '<Keyword %r>' % self.name
+        return '<Tag %r>' % self.name

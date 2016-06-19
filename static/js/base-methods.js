@@ -2,7 +2,7 @@
 
     // The Main Example on the Top
     $('#main-example').popSelect({
-      placeholderText: 'Select keywords',
+      placeholderText: 'Select tags',
       showTitle: false
       //autofocus: true
     });
@@ -37,18 +37,18 @@
       }
       return elements;
 };
-addNewKeyword = function()
+addNewTag = function()
 {
     var x = document.getElementsByClassName("popover-select-list")[0];
-    var new_keyword = document.getElementById("new_keyword").value;
-    $(x).append('<li data-value="'+new_keyword+'" data-text="'+new_keyword+'">'+new_keyword+'</li>')
+    var new_tag = document.getElementById("new_tag").value;
+    $(x).append('<li data-value="'+new_tag+'" data-text="'+new_tag+'">'+new_tag+'</li>')
 };
 function ClearFields() {
 
-     document.getElementById("new_keyword").value = "";
+     document.getElementById("new_tag").value = "";
 };
 function GetSelectedItem() {
-  document.getElementById('keywords').value = getMultipleSelectedValue()
+  document.getElementById('tags').value = getMultipleSelectedValue()
 };
 
   !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
