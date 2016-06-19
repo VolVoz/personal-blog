@@ -1,13 +1,15 @@
-from app import db, oembed_providers
+from database import db
 from config import Config
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 from micawber import parse_html
 from flask import Markup
-from sqlalchemy.exc import SQLAlchemyError
+from micawber import bootstrap_basic
+from micawber.cache import Cache as OEmbedCache
 
 
+oembed_providers = bootstrap_basic(OEmbedCache())
 relationship_table = db.Table('relationship_table',
                               db.Column('entries_id', db.Integer, db.ForeignKey('entries.id'), nullable=False),
                               db.Column('tags_id', db.Integer, db.ForeignKey('tags.id'), nullable=False),

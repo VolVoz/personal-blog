@@ -7,21 +7,15 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from flask import Flask, render_template, flash, redirect, request, \
     url_for, session
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask_mailer import Mailer
-from micawber import bootstrap_basic
-from micawber.cache import Cache as OEmbedCache
 from sqlalchemy import desc
 from sqlalchemy import exc
+from models import Entry, Tags
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config.from_object('config.StagingConfig')
-db = SQLAlchemy(app)
-oembed_providers = bootstrap_basic(OEmbedCache())
 smtp = Mailer(app)
-
-from models import Entry, Tags
 
 
 def login_required(fn):
@@ -171,8 +165,5 @@ def sort_by(tag):
 
 
 @app.errorhandler(404)
-def not_found(exc):
+def not_found():
     return render_template('404.html')
-
-if __name__ == '__main__':
-    app.run()
