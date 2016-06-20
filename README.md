@@ -35,3 +35,9 @@ python manage.py db migrate
 python manage.py db upgrade
 python manage.py runserver
 ```
+
+#### TODO:
+
+- [ ] Documentation for deploying to heroku
+- [ ] Launch unittests on the Travis-CI
+- [ ] Add site search tool
