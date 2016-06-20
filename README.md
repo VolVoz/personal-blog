@@ -1,5 +1,7 @@
 # Flask personal blog
 
+[![Code Health](https://landscape.io/github/VolVoz/personal-blog/master/landscape.svg?style=flat)](https://landscape.io/github/VolVoz/personal-blog/master)
+
 ## Setup
 
 ```
