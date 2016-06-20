@@ -168,3 +168,8 @@ def sort_by(tag):
 @app.errorhandler(404)
 def not_found():
     return render_template('404.html')
+
+
+@app.errorhandler(500)
+def server_error():
+    return render_template('500.html')
