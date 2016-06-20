@@ -19,15 +19,6 @@ app.config.from_object('config.StagingConfig')
 smtp = Mailer(app)
 
 
-def login_required(fn):
-    @functools.wraps(fn)
-    def inner(*args, **kwargs):
-        if session.get('logged_in'):
-            return fn(*args, **kwargs)
-        return redirect(url_for('login', next=request.path))
-    return inner
-
-
 class Mail(object):
     def __init__(self):
         pass
@@ -44,6 +35,15 @@ class Mail(object):
         mail_server.login(gmail_user, gmail_password)
         mail_server.sendmail(gmail_user, recipient, message.as_string())
         mail_server.close()
+
+
+def login_required(fn):
+    @functools.wraps(fn)
+    def inner(*args, **kwargs):
+        if session.get('logged_in'):
+            return fn(*args, **kwargs)
+        return redirect(url_for('login', next=request.path))
+    return inner
 
 
 @app.route('/')
