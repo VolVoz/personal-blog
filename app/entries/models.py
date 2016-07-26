@@ -61,7 +61,7 @@ class Entry(db.Model):
       return db.session.commit()
 
     def __repr__(self):
-        return '<Entry %r>' % self.slug
+        return '<Entry {0!r}>'.format(self.slug)
 
 
 class Tags(db.Model):
@@ -84,4 +84,4 @@ class Tags(db.Model):
         return db.session.commit()
 
     def __repr__(self):
-        return '<Tag %r>' % self.name
+        return '<Tag {0!r}>'.format(self.name)
