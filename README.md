@@ -18,22 +18,28 @@ Install requirements
 pip install -r requirements.txt
 
 ```
-Do not forget to set environment variables for the following parameters
-```
-export APP_SETTINGS=config.StagingConfig
-export DATABASE_URL='postgresql://DB_USERNAME:DB_PASSWORD@localhost/DB_NAME'
-export GMAIL_USER=your_mail@adress
-export GMAIL_PASS=mail_pass
-export SECRET_KEY=some_secret_key
-export ADMIN_PASSWORD=password
+Create a postgres database
 
+Do not forget to set environment variables for the following parameters in **'import_envs.sh'** and run:
+```
+source import_envs.sh
+```
+
+Run the migrations initialize Alembic:
+```
+python manage.py db init
+```
+Create migration by running the **db migrate** command:
+```
+python manage.py db migrate
+```
+Apply the upgrades to the database using the **db upgrade** command::
+```
+python manage.py db upgrade
 ```
 For run app:
 ```
-python manage.py db init
-python manage.py db migrate
-python manage.py db upgrade
-python manage.py runserver
+python manage.py start
 ```
 
 #### TODO:
