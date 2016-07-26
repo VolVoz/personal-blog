@@ -55,13 +55,13 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('about') }}">About</a></li>
-                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li><a href="{{ url_for('blog.index') }}">Home</a></li>
+                    <li><a href="{{ url_for('blog.about') }}">About</a></li>
+                    <li><a href="{{ url_for('blog.contact') }}">Contact</a></li>
                     {% if session.logged_in %}
                     {% block extra_header %}{% endblock %}
-                    <li><a href="{{ url_for('create') }}">New Entry</a></li>
-                    <li><a href="{{ url_for('logout') }}">Log out</a></li>
+                    <li><a href="{{ url_for('blog_entries.create') }}">New Entry</a></li>
+                    <li><a href="{{ url_for('blog.logout') }}">Log out</a></li>
                     {% endif %}
                 </ul>
             </div>

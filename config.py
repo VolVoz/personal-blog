@@ -2,12 +2,13 @@ import os
 
 
 class Config(object):
-    DEBUG = True
+    DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = os.environ['SECRET_KEY']
     ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SITE_WIDTH = 800
 
 

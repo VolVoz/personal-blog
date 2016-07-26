@@ -2,11 +2,11 @@
 
 {% block content_title %}<font size="9">Login</font>{% endblock %}
 
-{% block content_second_title %}Hey,whats up,dude? Lets make some entries,Voz... {% endblock %}
+{% block content_second_title %}Create new entry{% endblock %}
 
 {% block content %}
 
-  <form action="{{ url_for('login', next=next_url) }}" class="form-horizontal" method="post">
+  <form action="{{ url_for('blog.login', next=next_url) }}" class="form-horizontal" method="post">
     <div class="form-group">
       <label for="password" class="col-sm-2 control-label">Password</label>
       <div class="col-sm-10">

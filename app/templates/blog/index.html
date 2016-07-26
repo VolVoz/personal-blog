@@ -13,12 +13,12 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 {% for entry in object_list %}
                   <div class="post-preview">
-                    <a href="{{ url_for('detail', slug=entry.slug) }}">
+                    <a href="{{ url_for('blog_entries.detail', slug=entry.slug) }}">
                         <h2 class="post-title">{{ entry.title }}</h2>
                     </a>
                     <h4>
                     {% for tag in entry.tags %}
-                      <a href="{{ url_for('sort_by', tag=tag.name) }}">{{ tag.name }}</a>
+                      <a href="{{ url_for('blog_entries.sort_by', tag=tag.name) }}">{{ tag.name }}</a>
                     {% endfor %}
                     </h4>
                     <i class="fa fa-calendar" aria-hidden="true"> Created on {{ entry.timestamp.strftime('%m/%d/%Y') }}</i>

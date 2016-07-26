@@ -1,4 +1,3 @@
-from database import db
 from config import Config
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
@@ -7,6 +6,8 @@ from micawber import parse_html
 from flask import Markup
 from micawber import bootstrap_basic
 from micawber.cache import Cache as OEmbedCache
+
+from app.database import db
 
 
 oembed_providers = bootstrap_basic(OEmbedCache())
@@ -18,11 +19,13 @@ relationship_table = db.Table('relationship_table',
 
 class Entry(db.Model):
     __tablename__ = "entries"
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     slug = db.Column(db.String, unique=True)
     content = db.Column(db.String)
     timestamp = db.Column(db.DateTime)
+    
     tags = db.relationship('Tags', secondary=relationship_table, backref='entries')
 
     @property
@@ -63,6 +66,7 @@ class Entry(db.Model):
 
 class Tags(db.Model):
     __tablename__ = "tags"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
 

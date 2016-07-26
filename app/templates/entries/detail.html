@@ -8,7 +8,7 @@
 
 {% block extra_header %}
     {% if session.logged_in %}
-        <li><a href="{{ url_for('edit', slug=entry.slug) }}">Edit entry</a></li>
+        <li><a href="{{ url_for('blog_entries.edit', slug=entry.slug) }}">Edit entry</a></li>
     {% endif %}
 {% endblock %}
 
@@ -20,7 +20,7 @@
                 <p>{{ entry.html_content }}</p>
                 <h4>
                 {% for tag in entry.tags %}
-                  <a href="{{ url_for('sort_by', tag=tag.name) }}">{{ tag.name }}</a>
+                  <a href="{{ url_for('blog_entries.sort_by', tag=tag.name) }}">{{ tag.name }}</a>
                 {% endfor %}
                 </h4>
                 <p class="post-meta">Created on {{ entry.timestamp.strftime('%m/%d/%Y') }}</p>
