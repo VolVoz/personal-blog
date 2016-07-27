@@ -58,6 +58,6 @@ python manage.py start
 
 ### TODO:
 
-- [ ] Documentation for deploying to heroku
-- [ ] Launch unittests on the Travis-CI
+- [x] Add base unittests
+- [x] Launch unittests on the Travis-CI
 - [ ] Add site search tool
