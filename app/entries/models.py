@@ -56,7 +56,7 @@ class Entry(db.Model):
 
     @classmethod
     def update_entry(cls):
-      return db.session.commit()
+        return db.session.commit()
 
     def __repr__(self):
         return '<Entry %r>' % self.slug
