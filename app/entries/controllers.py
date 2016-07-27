@@ -21,21 +21,21 @@ module = Blueprint('blog_entries', __name__, url_prefix='/entries')
 def create():
     try:
         if request.method == 'POST':
-                new_entry = Entry(title=request.form['title'],
-                                  content=request.form['content'],
-                                  timestamp=datetime.utcnow().isoformat(),
-                                  slug=re.sub('[^\w]+', '-', request.form['title'].lower()).strip('-'))
-                for tag in request.form.get("tags").split(","):
-                    if tag in [key.name for key in Tags.query.all()]:
-                        curr_key = Tags.query.filter_by(name=tag).first()
-                        new_entry.tags.append(curr_key)
-                    else:
-                        new_key = Tags(tag)
-                        Tags.add_tag(new_key)
-                        new_entry.tags.append(new_key)
-                Entry.add_entry(new_entry)
-                flash('Entry created successfully.', 'success')
-                return render_template('entries/detail.html', entry=new_entry)
+            new_entry = Entry(title=request.form['title'],
+                            content=request.form['content'],
+                            timestamp=datetime.utcnow().isoformat(),
+                            slug=re.sub('[^\w]+', '-', request.form['title'].lower()).strip('-'))
+            for tag in request.form.get("tags").split(","):
+                if tag in [key.name for key in Tags.query.all()]:
+                    curr_key = Tags.query.filter_by(name=tag).first()
+                    new_entry.tags.append(curr_key)
+                else:
+                    new_key = Tags(tag)
+                    Tags.add_tag(new_key)
+                    new_entry.tags.append(new_key)
+            Entry.add_entry(new_entry)
+            flash('Entry created successfully.', 'success')
+            return render_template('entries/detail.html', entry=new_entry)
     except SQLAlchemyError as e:
         log_error('There was error while querying database', exc_info=e)
         flash('There was error while querying database', 'danger')
