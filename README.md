@@ -2,7 +2,6 @@
 
 [![Code Health](https://landscape.io/github/VolVoz/personal-blog/master/landscape.svg?style=flat)](https://landscape.io/github/VolVoz/personal-blog/master)
 [![Build Status](https://travis-ci.org/VolVoz/personal-blog.svg?branch=master)](https://travis-ci.org/VolVoz/personal-blog)
-[![Code Climate](https://codeclimate.com/github/VolVoz/personal-blog/badges/gpa.svg)](https://codeclimate.com/github/VolVoz/personal-blog)
 [![Coverage Status](https://coveralls.io/repos/github/VolVoz/personal-blog/badge.svg?branch=master)](https://coveralls.io/github/VolVoz/personal-blog?branch=master)
 
 ## Setup
