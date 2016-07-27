@@ -2,11 +2,17 @@ language: python
 python:
   - "2.7"
 
+services:
+  - postgresql
+
 install: 
   - pip install -r requipments/requirements.txt
 
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+
 script:
-  python manage.py db init
-  python manage.py db migrate
-  python manage.py db upgrade
+  - python manage.py db init
+  - python manage.py db migrate
+  - python manage.py db upgrade
   
