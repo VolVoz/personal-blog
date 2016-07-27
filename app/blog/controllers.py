@@ -1,9 +1,8 @@
-import re
+#!/usr/bin/python
+
 import os
-import functools
 import smtplib
 from flask import (
-    Flask,
     Blueprint,
     render_template,
     request,
@@ -11,18 +10,16 @@ from flask import (
     abort,
     redirect,
     url_for,
-    current_app,
     session,
 )
-from flask_mailer import Mailer
 from app.entries.models import Entry
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import desc
-from datetime import datetime
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from email.errors import MessageError
 from smtplib import SMTPAuthenticationError
+from app.general.controllers import login_required, log_error
 
 
 module = Blueprint('blog', __name__)
@@ -46,20 +43,9 @@ class Mail(object):
         mail_server.close()
 
 
-def log_error(*args, **kwargs):
-    current_app.logger.error(*args, **kwargs)
-
-def login_required(fn):
-    @functools.wraps(fn)
-    def inner(*args, **kwargs):
-        if session.get('logged_in'):
-            return fn(*args, **kwargs)
-        return redirect(url_for('blog.login', next=request.path))
-    return inner
-
-
 @module.route('/', methods=['GET'])
 def index():
+    entries = None
     try:
         entries = Entry.query.order_by(desc(Entry.timestamp)).all()
     except SQLAlchemyError as e:
@@ -87,7 +73,7 @@ def contact():
             flash('Thank you!', 'success')
         except (MessageError, SMTPAuthenticationError) as e:
             log_error('There was error while sending email', exc_info=e)
-            flash('Oops, some happends with smtp.. sorry, I fix it at next commit!', 'danger')
+            flash('There was error while sending email', 'danger')
     return render_template('blog/contact.html')
 
 

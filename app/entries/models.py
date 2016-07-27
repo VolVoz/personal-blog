@@ -6,7 +6,6 @@ from micawber import parse_html
 from flask import Markup
 from micawber import bootstrap_basic
 from micawber.cache import Cache as OEmbedCache
-
 from app.database import db
 
 
@@ -25,7 +24,6 @@ class Entry(db.Model):
     slug = db.Column(db.String, unique=True)
     content = db.Column(db.String)
     timestamp = db.Column(db.DateTime)
-    
     tags = db.relationship('Tags', secondary=relationship_table, backref='entries')
 
     @property

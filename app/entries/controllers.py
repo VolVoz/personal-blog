@@ -1,42 +1,20 @@
 import re
-import os
-import functools
-import smtplib
 from flask import (
-    Flask,
     Blueprint,
     render_template,
     request,
     flash,
     abort,
-    redirect,
-    url_for,
-    current_app,
-    session,
 )
-from flask_mailer import Mailer
-from .models import Entry, Tags, db
+from .models import Entry, Tags
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import desc
 from datetime import datetime
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.errors import MessageError
+from app.general.controllers import login_required, log_error
 
 
-module = Blueprint('blog_entries', __name__)
+module = Blueprint('blog_entries', __name__, url_prefix='/entries')
 
-
-def log_error(*args, **kwargs):
-    current_app.logger.error(*args, **kwargs)
-
-def login_required(fn):
-    @functools.wraps(fn)
-    def inner(*args, **kwargs):
-        if session.get('logged_in'):
-            return fn(*args, **kwargs)
-        return redirect(url_for('blog.login', next=request.path))
-    return inner
 
 @module.route('/create/', methods=['GET', 'POST'])
 @login_required
@@ -100,6 +78,7 @@ def detail(slug):
         log_error('Entry not found', exc_info=e)
         flash('Entry not found', 'danger')
         abort(404)
+
 
 @module.route('/sort_by/<tag>/')
 def sort_by(tag):

@@ -11,7 +11,7 @@ def create_app():
     with app.test_request_context():
         db.create_all()
 
-    if app.debug == True:
+    if app.debug:
         try:
             from flask_debugtoolbar import DebugToolbarExtension
             toolbar = DebugToolbarExtension(app)
