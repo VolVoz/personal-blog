@@ -27,5 +27,5 @@ ratings:
   - "**.module"
   - "**.py"
 exclude_paths:
-- "app/"
-- "**/vendor/"
+- app/**/*
+- vendor/**/*

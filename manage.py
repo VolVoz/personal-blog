@@ -11,7 +11,7 @@ manager = Manager(app)
 migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
-manager.add_command('start', Server(host=os.environ.get('IP', '0.0.0.0'), # command for run app in browser IDE
+manager.add_command('start', Server(host=os.environ.get('IP', '0.0.0.0'),  # command for run app in browser IDE
                                     port=int(os.environ.get('PORT', 8080))))
 
 if __name__ == '__main__':
