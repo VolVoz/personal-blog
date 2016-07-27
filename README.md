@@ -1,6 +1,7 @@
 # Flask personal blog
 
 [![Code Health](https://landscape.io/github/VolVoz/personal-blog/master/landscape.svg?style=flat)](https://landscape.io/github/VolVoz/personal-blog/master)
+[![Build Status](https://travis-ci.org/VolVoz/personal-blog.svg?branch=master)](https://travis-ci.org/VolVoz/personal-blog)
 
 ## Setup
 

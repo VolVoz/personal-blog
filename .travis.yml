@@ -1,0 +1,12 @@
+language: python
+python:
+  - "2.7"
+
+install: 
+  - pip install -r requipments/requirements.txt
+
+script:
+  python manage.py db init
+  python manage.py db migrate
+  python manage.py db upgrade
+  
