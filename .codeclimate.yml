@@ -27,4 +27,7 @@ ratings:
   - "**.module"
   - "**.py"
 exclude_paths:
+- app/blog
+- app/entries
 - app/
+- .
