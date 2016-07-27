@@ -6,8 +6,7 @@ engines:
       languages:
       - python
     exclude_paths:
-    # duplicate structures in dictionary
-    - codeclimate_test_reporter/components/ci.py
+      - app/**/*
   fixme:
     enabled: true
   markdownlint:
@@ -16,16 +15,8 @@ engines:
     enabled: true
   radon:
     enabled: true
-    exclude_fingerprints:
-    # complexity in PayloadValidator#validate
-    - 1b18d0fde7d0511be196bcc366180bf8
-    # complexity in Runner#run
-    - c1a982077efa39ca50db944490e15485
 ratings:
   paths:
-  - "**.inc"
-  - "**.module"
   - "**.py"
 exclude_paths:
-- app/**/*
-- vendor/**/*
+  - app/**/*

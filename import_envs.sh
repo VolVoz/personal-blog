@@ -2,7 +2,7 @@
 echo === IMPORT ENVS ===
 export APP_SETTINGS=config.StagingConfig
 export DATABASE_URL='postgresql://DB_USERNAME:DB_PASSWORD@localhost/DB_NAME'
-export GMAIL_USER=your_mail@adress
+export GMAIL_USER=user@gmail.com
 export GMAIL_PASS=mail_pass
 export SECRET_KEY=some_secret_key
 export ADMIN_PASSWORD=password
