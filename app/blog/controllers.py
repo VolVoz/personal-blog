@@ -21,7 +21,6 @@ from email.errors import MessageError
 from smtplib import SMTPAuthenticationError
 from app.general.controllers import login_required, log_error
 
-
 module = Blueprint('blog', __name__)
 
 

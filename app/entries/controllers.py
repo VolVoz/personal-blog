@@ -20,7 +20,6 @@ module = Blueprint('blog_entries', __name__, url_prefix='/entries')
 @login_required
 def create():
     try:
-        tags = Tags.query.all()
         if request.method == 'POST':
                 new_entry = Entry(title=request.form['title'],
                                   content=request.form['content'],
@@ -34,13 +33,13 @@ def create():
                         new_key = Tags(tag)
                         Tags.add_tag(new_key)
                         new_entry.tags.append(new_key)
-                    Entry.add_entry(new_entry)
-                    flash('Entry created successfully.', 'success')
-                    return render_template('entries/detail.html', entry=new_entry)
+                Entry.add_entry(new_entry)
+                flash('Entry created successfully.', 'success')
+                return render_template('entries/detail.html', entry=new_entry)
     except SQLAlchemyError as e:
         log_error('There was error while querying database', exc_info=e)
         flash('There was error while querying database', 'danger')
-    return render_template('entries/create.html', tags=tags)
+    return render_template('entries/create.html', tags=Tags.query.all())
 
 
 @module.route('/<slug>/edit/', methods=['GET', 'POST'])
@@ -48,7 +47,6 @@ def create():
 def edit(slug):
     try:
         entry = Entry.query.filter_by(slug=slug).first()
-        tags = Tags.query.all()
         if request.method == 'POST' and request.form.get('_method', '').upper() == 'DELETE':
             Entry.delete_entry(entry)
             flash('Entry deleted successfully.', 'success')
@@ -66,7 +64,7 @@ def edit(slug):
         log_error('Uncaught exception while querying database at entity.update', exc_info=e)
         flash('Uncaught error while querying database', 'danger')
         abort(500)
-    return render_template('entries/edit.html', entry=entry, tags=tags)
+    return render_template('entries/edit.html', entry=entry, tags=Tags.query.all())
 
 
 @module.route('/<slug>/')

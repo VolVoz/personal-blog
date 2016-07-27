@@ -9,7 +9,8 @@ class Config(object):
     ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SITE_WIDTH = 800
+    SITE_WIDTH = 900
+    POSTS_PER_PAGE = 3
 
 
 class ProductionConfig(Config):

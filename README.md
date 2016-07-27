@@ -15,7 +15,7 @@ source env/bin/activate
 ```
 Install requirements
 ```
-pip install -r requirements.txt
+pip install -r requipments/requirements.txt
 
 ```
 Create a postgres database
