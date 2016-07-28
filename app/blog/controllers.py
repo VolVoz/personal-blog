@@ -20,6 +20,7 @@ from email.MIMEText import MIMEText
 from email.errors import MessageError
 from smtplib import SMTPAuthenticationError
 from app.general.controllers import login_required, log_error
+from config import Config
 
 module = Blueprint('blog', __name__)
 
@@ -42,11 +43,13 @@ class Mail(object):
         mail_server.close()
 
 
-@module.route('/', methods=['GET'])
-def index():
+@module.route('/', defaults={'page': 1}, methods=['GET', 'POST'])
+@module.route('/index/', defaults={'page': 1}, methods=['GET', 'POST'])
+@module.route('/index/page/<int:page>', methods=['GET', 'POST'])
+def index(page=1):
     entries = None
     try:
-        entries = Entry.query.order_by(desc(Entry.timestamp)).all()
+        entries = Entry.query.order_by(desc(Entry.timestamp)).paginate(page, Config.POSTS_PER_PAGE, False)
     except SQLAlchemyError as e:
         log_error('Error while querying database', exc_info=e)
         flash('There was uncaught database query', 'danger')

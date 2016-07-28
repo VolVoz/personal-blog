@@ -7,21 +7,22 @@
 {% block content %}
 
 
-
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                {% for entry in object_list %}
+                {% for entry in object_list.items %}
                   <div class="post-preview">
                     <a href="{{ url_for('blog_entries.detail', slug=entry.slug) }}">
                         <h2 class="post-title">{{ entry.title }}</h2>
                     </a>
-                    <h4>
-                    <i class="fa fa-tags" aria-hidden="true"></i>
-                    {% for tag in entry.tags %}
-                      <a href="{{ url_for('blog_entries.sort_by', tag=tag.name) }}">{{ tag.name }}</a>
-                    {% endfor %}
-                    </h4>
+                    {% if entry.tags %}
+                        <h4>
+                        <i class="fa fa-tags" aria-hidden="true"></i>
+                        {% for tag in entry.tags %}
+                          <a href="{{ url_for('blog_entries.sort_by', tag=tag.name) }}">{{ tag.name }}</a>
+                        {% endfor %}
+                        </h4>
+                    {% endif %}
                     <i class="fa fa-calendar" aria-hidden="true"> Created on {{ entry.timestamp.strftime('%m/%d/%Y') }}</i>
                   </div>
                   <hr>
@@ -29,11 +30,20 @@
                   <p>No entries have been created yet.</p>
                 {% endfor %}
                 <!-- Pager -->
+                {% if object_list.pages > 1 %}
                 <ul class="pager">
-                    <li class="next">
-                        <a href="#">Older Posts &rarr;</a>
-                    </li>
+                  {% if object_list.page > 1 %}
+                    <li class="previous"><a href="{{ url_for('blog.index', page = object_list.prev_num) }}">&laquo; Previous {{ object_list.page - 1 }} / {{ object_list.pages }}</a></li>
+                  {% else %}
+                    <li class="previous disabled"><a href="#">&laquo; Previous</a></li>
+                  {% endif %}
+                  {% if object_list.pages > object_list.page %}
+                    <li class="next"><a href="{{ url_for('blog.index', page = object_list.next_num) }}">Next {{ object_list.page + 1 }} / {{ object_list.pages }} &raquo;</a></li>
+                  {% else %}
+                    <li class="next disabled"><a href="#">Next &raquo;</a></li>
+                  {% endif %}
                 </ul>
+                {% endif %}
             </div>
         </div>
     </div>

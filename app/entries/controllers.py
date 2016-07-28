@@ -26,7 +26,9 @@ def create():
                             timestamp=datetime.utcnow().isoformat(),
                             slug=re.sub('[^\w]+', '-', request.form['title'].lower()).strip('-'))
             for tag in request.form.get("tags").split(","):
-                if tag in [key.name for key in Tags.query.all()]:
+                if len(tag.strip()) == 0:
+                    continue
+                elif tag in [key.name for key in Tags.query.all()]:
                     curr_key = Tags.query.filter_by(name=tag).first()
                     new_entry.tags.append(curr_key)
                 else:
