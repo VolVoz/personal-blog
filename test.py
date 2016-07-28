@@ -11,10 +11,6 @@ class ApplicationBaseTest(unittest.TestCase):
     def test_get_static_page_contact(self):
         response = self.client.get('/contact/')
         self.assertEqual(response.status_code, 200)
-
-    def test_get_static_page_index(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
         
     def test_get_static_page_about(self):
         response = self.client.get('/about/')
