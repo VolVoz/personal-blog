@@ -993,6 +993,7 @@ $(function() {
     });
 });
 
+
 // Navigation Scripts to Show Header on Scroll-Up
 jQuery(document).ready(function($) {
     var MQL = 1170;
