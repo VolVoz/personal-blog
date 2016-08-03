@@ -68,7 +68,9 @@ def contact():
         m = Mail()
         msg = MIMEMultipart()
         msg['Subject'] = "New answer from BLOG"
-        message = "\nHello, my name is " + request.form['name'] + ".\n My email: " + request.form['email'] + ".\n Message: " + request.form['message']
+        message = "\nHello,my name is " + request.form['name'].encode('utf-8') \
+                    + ".\n My email: " + request.form['email'].encode('utf-8') \
+                    + ".\n Message: " + request.form['message'].encode('utf-8')
         msg.attach(MIMEText(message))
         try:
             m.send_mail(msg)
