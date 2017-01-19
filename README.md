@@ -7,18 +7,18 @@
 ## Setup
 
 ```
-git clone https://github.com/VolVoz/personal-blog/
+git clone https://github.com/VolVoz/personal-blog.git
 cd personal-blog/
 ```
 
-Make virtualenv
+## Make virtualenv
 
 ```
 virtualenv -p env
 source env/bin/activate
 ```
 
-Install requirements
+## Install requirements
 
 ```
 pip install -r requipments/requirements.txt
