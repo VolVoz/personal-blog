@@ -1,7 +1,7 @@
 #!/bin/sh
 echo === IMPORT ENVS ===
 export APP_SETTINGS=config.StagingConfig
-export DATABASE_URL='postgresql://DB_USERNAME:DB_PASSWORD@localhost/DB_NAME'
+export DATABASE_URL='postgresql://tom:tom@localhost/jerry'
 export GMAIL_USER=user@gmail.com
 export GMAIL_PASS=mail_pass
 export SECRET_KEY=some_secret_key
