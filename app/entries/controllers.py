@@ -29,7 +29,6 @@ def create():
                 if len(tag.strip()) == 0:
                     continue
                 elif tag in [key.name for key in Tags.query.all()]:
-                    import pdb;pdb.set_trace;
                     curr_key = Tags.query.filter_by(name=tag).first()
                     new_entry.tags.append(curr_key)
                 else:
