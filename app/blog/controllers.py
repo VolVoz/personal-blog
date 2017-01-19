@@ -43,11 +43,10 @@ class Mail(object):
         mail_server.close()
 
 
-@module.route('/', defaults={'page': 1}, methods=['GET', 'POST'])
-@module.route('/index/', defaults={'page': 1}, methods=['GET', 'POST'])
-@module.route('/index/page/<int:page>', methods=['GET', 'POST'])
-def index(page=1):
-    entries = None
+@module.route('/', defaults={'page': 1}, methods=['GET'])
+@module.route('/index/', defaults={'page': 1}, methods=['GET'])
+@module.route('/index/page/<int:page>', methods=['GET'])
+def index(page=1, entries=None):
     try:
         entries = Entry.query.order_by(desc(Entry.timestamp)).paginate(page, Config.POSTS_PER_PAGE, False)
     except SQLAlchemyError as e:
@@ -65,15 +64,15 @@ def about():
 @module.route('/contact/', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        m = Mail()
-        msg = MIMEMultipart()
-        msg['Subject'] = "New answer from BLOG"
-        message = "\nHello,my name is " + request.form['name'].encode('utf-8') \
+        try:
+            email = Mail()
+            msg = MIMEMultipart()
+            msg['Subject'] = "New answer from BLOG"
+            message = "\nHello,my name is " + request.form['name'].encode('utf-8') \
                     + ".\n My email: " + request.form['email'].encode('utf-8') \
                     + ".\n Message: " + request.form['message'].encode('utf-8')
-        msg.attach(MIMEText(message))
-        try:
-            m.send_mail(msg)
+            msg.attach(MIMEText(message))
+            email.send_mail(msg)
             flash('Thank you!', 'success')
         except (MessageError, SMTPAuthenticationError) as e:
             log_error('There was error while sending email', exc_info=e)
