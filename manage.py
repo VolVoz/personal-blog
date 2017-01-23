@@ -28,7 +28,7 @@ def cov():
     """Runs the unit tests with coverage."""
     cov = coverage.coverage(
         branch=True,
-        include='project/*',
+        include='app/*',
         omit=['*/__init__.py']
     )
     cov.start()
@@ -39,7 +39,7 @@ def cov():
     print 'Coverage Summary:'
     cov.report()
     basedir = os.path.abspath(os.path.dirname(__file__))
-    covdir = os.path.join(basedir, 'tmp/coverage')
+    covdir = os.path.join(basedir, 'cover')
     cov.html_report(directory=covdir)
     print('HTML version: file://%s/index.html' % covdir)
     cov.erase()

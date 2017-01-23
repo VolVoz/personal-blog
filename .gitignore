@@ -8,6 +8,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 cover/
+tmp/
 env/
 bin/
 build/
