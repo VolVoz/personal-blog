@@ -13,7 +13,8 @@ manager = Manager(app)
 migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
-manager.add_command('start', Server(host=os.environ.get('IP', '0.0.0.0'),  # command for run app in browser IDE
+#  command for run app in browser IDE
+manager.add_command('start', Server(host=os.environ.get('IP', '0.0.0.0'),
                                     port=int(os.environ.get('PORT', 8080))))
 
 @manager.command
@@ -44,11 +45,6 @@ def cov():
     print('HTML version: file://%s/index.html' % covdir)
     cov.erase()
 
-
-@manager.command
-def create_data():
-    """Creates sample data."""
-    pass
 
 if __name__ == '__main__':
     manager.run()
