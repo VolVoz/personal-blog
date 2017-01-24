@@ -13,9 +13,10 @@ manager = Manager(app)
 migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
+
 #  command for run app in browser IDE
-manager.add_command('start', Server(host=os.environ.get('IP', '0.0.0.0'),
-                                    port=int(os.environ.get('PORT', 8080))))
+manager.add_command('start', Server(host='0.0.0.0',
+                                    port=8080))
 
 @manager.command
 def test():
