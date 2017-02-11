@@ -17,3 +17,4 @@ six==1.5.2
 urllib3==1.7.1
 micawber==0.3.3
 coverage==4.3.4
+beautifulsoup4==4.5.3

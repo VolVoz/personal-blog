@@ -28,13 +28,13 @@ def create():
             for tag in request.form.get("tags").split(","):
                 if len(tag.strip()) == 0:
                     continue
-                elif tag in [key.name for key in Tags.query.all()]:
-                    curr_key = Tags.query.filter_by(name=tag).first()
-                    new_entry.tags.append(curr_key)
+                elif Tags.query.filter_by(name=tag).scalar():
+                    exist_tag = Tags.query.filter_by(name=tag).first()
+                    new_entry.tags.append(exist_tag)
                 else:
-                    new_key = Tags(tag)
-                    Tags.add_tag(new_key)
-                    new_entry.tags.append(new_key)
+                    new_tag = Tags(tag)
+                    Tags.add_tag(new_tag)
+                    new_entry.tags.append(new_tag)
             Entry.add_entry(new_entry)
             flash('Entry created successfully.', 'success')
             return render_template('entries/detail.html', entry=new_entry)
